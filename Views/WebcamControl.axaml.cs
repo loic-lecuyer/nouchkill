@@ -30,13 +30,14 @@ public partial class WebcamControl : UserControl
     public WebcamControl()
     {
         InitializeComponent();
-        string appPath = AppDomain.CurrentDomain.BaseDirectory;
-        modelPath = System.IO.Path.Combine(appPath, "Onnx", "FasterRCNN-10.onnx");
+       // string appPath = AppDomain.CurrentDomain.BaseDirectory;
+      //  modelPath = System.IO.Path.Combine(appPath, "Onnx", "FasterRCNN-10.onnx");
         //   var gpuSessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider(0);
         //  inferenceSession = new InferenceSession(modelPath, gpuSessionOptions);
-        // inferenceSession = new InferenceSession(modelPath);
-        StartWebcam();
+      //   inferenceSession = new InferenceSession(modelPath);
+       StartWebcam();
     }
+
     public void StartWebcam()
     {
         _capture = new VideoCapture(0); // 0 = caméra par défaut
@@ -53,10 +54,12 @@ public partial class WebcamControl : UserControl
 
                     if (!frame.Empty())
                     {
-                        var imageSharp = ConvertMatToImageSharp(frame);
-                        List<Prediction> predictions = ProcessInference(imageSharp);
-                        DrawPredictions(imageSharp, predictions);
-                        var avaloniaBitmap = ToAvaloniaBitmap(imageSharp);
+                        //
+                        //
+                       //   var imageSharp = ConvertMatToImageSharp(frame);
+                       // List<Prediction> predictions = ProcessInference(imageSharp);
+                       // DrawPredictions(imageSharp, predictions);
+                        var avaloniaBitmap = new Avalonia.Media.Imaging.Bitmap(frame.ToMemoryStream());
                         await Dispatcher.UIThread.InvokeAsync(() =>
                         {
                             WebcamImage.Source = avaloniaBitmap;
@@ -199,7 +202,7 @@ public partial class WebcamControl : UserControl
         base.OnUnloaded(e);
         _cancellationTokenSource?.Cancel();
         _capture?.Dispose();
-        inferenceSession.Dispose();
+       // inferenceSession.Dispose();
     }
 
 }
