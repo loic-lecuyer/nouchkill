@@ -1,10 +1,37 @@
-﻿namespace NouchKill.ViewModels
+﻿using NouchKill.IO;
+using ReactiveUI;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
+
+namespace NouchKill.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        // Modèle downlad : https://github.com/onnx/models/blob/main/validated/vision/object_detection_segmentation/faster-rcnn/model/FasterRCNN-10.onnx
-#pragma warning disable CA1822 // Mark members as static
-        public string Greeting => "Welcome to Avalonia!";
-#pragma warning restore CA1822 // Mark members as static
+        private WebcamStream _stream = new WebcamStream();
+        public WebcamStream Stream
+        {
+            get { return _stream; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _stream, value);
+            }
+        }
+
+        public ICommand OpenMainWindowCommand => ReactiveCommand.CreateFromTask(OnOpened);
+        public ICommand CloseMainWindowCommand => ReactiveCommand.CreateFromTask(OnClosing);
+
+        private async Task OnOpened()
+        {
+            Console.WriteLine("Fenêtre ouverte !");
+            _stream.Start();
+        }
+
+        private async Task OnClosing()
+        {
+            Console.WriteLine("Fermeture en cours !");
+            _stream.Stop();
+        }
+
     }
 }

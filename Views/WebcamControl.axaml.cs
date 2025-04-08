@@ -1,43 +1,62 @@
+using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using Microsoft.ML.OnnxRuntime;
-using Microsoft.ML.OnnxRuntime.Tensors;
-using NouchKill.Models;
-using OpenCvSharp;
-using SixLabors.Fonts;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using NouchKill.IO;
+using NouchKill.Utils;
 namespace NouchKill.Views;
 
 public partial class WebcamControl : UserControl
 {
-    private VideoCapture _capture;
-    private CancellationTokenSource _cancellationTokenSource;
-    private string modelPath;
-    private InferenceSession inferenceSession;
+    public static readonly DirectProperty<WebcamControl, WebcamStream?> StreamProperty =
+    AvaloniaProperty.RegisterDirect<WebcamControl, WebcamStream?>(
+        nameof(Stream),
+        o => o.Stream,
+        (o, v) => o.Stream = v);
+
+    private WebcamStream? _stream = null;
+
+    public WebcamStream? Stream
+    {
+        get { return _stream; }
+        set
+        {
+            if (_stream != null)
+            {
+                _stream.OnImageRead -= _stream_OnImageRead;
+            }
+            SetAndRaise(StreamProperty, ref _stream, value);
+            if (_stream != null)
+            {
+                _stream.OnImageRead += _stream_OnImageRead;
+            }
+        }
+    }
+
+    private async void _stream_OnImageRead(object? sender, SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgb24> e)
+    {
+        var avaloniaBitmap = ImageUtils.ToAvaloniaBitmap(e);
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            WebcamImage.Source = avaloniaBitmap;
+        });
+    }
+
+
+    // private VideoCapture _capture;
+    // private CancellationTokenSource _cancellationTokenSource;
+    // private string modelPath;
+    // private InferenceSession inferenceSession;
     public WebcamControl()
     {
         InitializeComponent();
-       // string appPath = AppDomain.CurrentDomain.BaseDirectory;
-      //  modelPath = System.IO.Path.Combine(appPath, "Onnx", "FasterRCNN-10.onnx");
+        // string appPath = AppDomain.CurrentDomain.BaseDirectory;
+        //  modelPath = System.IO.Path.Combine(appPath, "Onnx", "FasterRCNN-10.onnx");
         //   var gpuSessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider(0);
         //  inferenceSession = new InferenceSession(modelPath, gpuSessionOptions);
-      //   inferenceSession = new InferenceSession(modelPath);
-       StartWebcam();
+        //   inferenceSession = new InferenceSession(modelPath);
+        //    StartWebcam();
     }
-
+    /*
     public void StartWebcam()
     {
         _capture = new VideoCapture(0); // 0 = caméra par défaut
@@ -76,6 +95,9 @@ public partial class WebcamControl : UserControl
             }
         }, _cancellationTokenSource.Token);
     }
+    */
+
+    /*
 
     private List<Prediction> ProcessInference(Image<Rgb24> image)
     {
@@ -132,6 +154,9 @@ public partial class WebcamControl : UserControl
         return predictions;
 
     }
+    */
+
+    /*
     public static void DrawPredictions(Image<Rgb24> image, List<Prediction> predictions)
     {
         Stopwatch timer = new Stopwatch();
@@ -204,5 +229,6 @@ public partial class WebcamControl : UserControl
         _capture?.Dispose();
        // inferenceSession.Dispose();
     }
+    */
 
 }
