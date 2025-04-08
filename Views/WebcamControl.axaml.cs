@@ -32,9 +32,9 @@ public partial class WebcamControl : UserControl
         InitializeComponent();
         string appPath = AppDomain.CurrentDomain.BaseDirectory;
         modelPath = System.IO.Path.Combine(appPath, "Onnx", "FasterRCNN-10.onnx");
-        // var gpuSessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider(0);
-        //    inferenceSession = new InferenceSession(modelPath, gpuSessionOptions);
-        inferenceSession = new InferenceSession(modelPath);
+        //   var gpuSessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider(0);
+        //  inferenceSession = new InferenceSession(modelPath, gpuSessionOptions);
+        // inferenceSession = new InferenceSession(modelPath);
         StartWebcam();
     }
     public void StartWebcam()
