@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NouchKill", "NouchKill.csproj", "{CE6E4B8B-1865-41BB-B563-731B412B954F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE6E4B8B-1865-41BB-B563-731B412B954F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE6E4B8B-1865-41BB-B563-731B412B954F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE6E4B8B-1865-41BB-B563-731B412B954F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE6E4B8B-1865-41BB-B563-731B412B954F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7F429F4-217D-43FE-9A9A-BF98CD8EC050}
+	EndGlobalSection
+EndGlobal
