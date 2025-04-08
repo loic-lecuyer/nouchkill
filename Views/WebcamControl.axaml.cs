@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using NouchKill.IO;
 using NouchKill.Utils;
+using System;
 namespace NouchKill.Views;
 
 public partial class WebcamControl : UserControl
@@ -34,18 +35,28 @@ public partial class WebcamControl : UserControl
 
     private async void _stream_OnImageRead(object? sender, SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgb24> e)
     {
-        var avaloniaBitmap = ImageUtils.ToAvaloniaBitmap(e);
-        await Dispatcher.UIThread.InvokeAsync(() =>
+        var avaloniaBitmap = ImageUtils.ToAvaloniaBitmap(e.Clone());
+        try
         {
-            WebcamImage.Source = avaloniaBitmap;
-        });
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                Width = avaloniaBitmap.Size.Width;
+                Height = avaloniaBitmap.Size.Height;
+                WebcamImage.Width = avaloniaBitmap.Size.Width;
+                WebcamImage.Height = avaloniaBitmap.Size.Height;
+                WebcamImage.Source = avaloniaBitmap;
+
+            });
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
+
     }
 
 
-    // private VideoCapture _capture;
-    // private CancellationTokenSource _cancellationTokenSource;
-    // private string modelPath;
-    // private InferenceSession inferenceSession;
+
     public WebcamControl()
     {
         InitializeComponent();

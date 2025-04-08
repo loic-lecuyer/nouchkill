@@ -46,8 +46,9 @@ namespace NouchKill.IO
                             _capture.Read(frame);
                             if (!frame.Empty())
                             {
-                                var image = ImageUtils.ConvertMatToImageSharp(frame);
+                                using var image = ImageUtils.ConvertMatToImageSharp(frame);
                                 OnImageRead?.Invoke(this, image);
+
                                 if (timerDebug.Elapsed.TotalSeconds > 3)
                                 {
                                     if (fps.Count > 0)

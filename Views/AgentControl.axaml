@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		    xmlns:models="using:NouchKill.Models"
+             x:Class="NouchKill.Views.AgentControl">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="Auto"></RowDefinition>
+	
+		</Grid.RowDefinitions>
+		<ListBox Grid.Row="0" x:Name="PredictionList">
+			<ListBox.ItemTemplate>
+				<DataTemplate DataType="{x:Type models:PredictionByClass}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"></ColumnDefinition>
+							<ColumnDefinition Width="100"></ColumnDefinition>
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding Path=Label}"></TextBlock>
+						<TextBlock Text="{Binding Path=Count}" Grid.Column="1"></TextBlock>
+
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"></RowDefinition>
+				<RowDefinition Height="Auto"></RowDefinition>
+			</Grid.RowDefinitions>
+			<TextBlock VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="2" Text="Classes : "></TextBlock>
+			<TextBox Text="bird,cat,dog,horse,sheep,cow,person" Margin="2" VerticalAlignment="Center"  x:Name="TxtClasses" Grid.Column="1" Grid.Row="0"></TextBox>
+			<TextBlock  VerticalAlignment="Center"  Grid.Column="0" Grid.Row="1" Margin="2" Text="Son : "></TextBlock>
+			<TextBox  Text=""   Margin="2" VerticalAlignment="Center"  x:Name="TxtSound" Grid.Column="1" Grid.Row="1"></TextBox>
+		</Grid>
+	</Grid>
+	
+</UserControl>

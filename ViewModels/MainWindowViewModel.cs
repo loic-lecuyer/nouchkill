@@ -18,18 +18,31 @@ namespace NouchKill.ViewModels
             }
         }
 
+
+        private OnnxStream _onnx = new FasterRcnnOnnxStream();
+        public OnnxStream Onnx
+        {
+            get { return _onnx; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _onnx, value);
+            }
+        }
+
         public ICommand OpenMainWindowCommand => ReactiveCommand.CreateFromTask(OnOpened);
         public ICommand CloseMainWindowCommand => ReactiveCommand.CreateFromTask(OnClosing);
 
         private async Task OnOpened()
         {
             Console.WriteLine("Fenêtre ouverte !");
+            _onnx.Start();
             _stream.Start();
         }
 
         private async Task OnClosing()
         {
             Console.WriteLine("Fermeture en cours !");
+            _onnx.Stop();
             _stream.Stop();
         }
 

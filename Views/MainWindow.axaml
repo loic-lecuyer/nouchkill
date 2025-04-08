@@ -9,6 +9,7 @@
         behaviors:WindowBehaviors.ClosingCommand="{Binding CloseMainWindowCommand}"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="NouchKill.Views.MainWindow"
+		SizeToContent="WidthAndHeight"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="NouchKill">
@@ -18,7 +19,22 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-	<views:WebcamControl Stream="{Binding Path=Stream}"></views:WebcamControl>
- 
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="200"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+		<views:AgentControl 	Onnx="{Binding Path=Onnx}" Grid.Column="0"></views:AgentControl>
+		<Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
+			<views:WebcamControl x:Name="WebcamControl"  Stream="{Binding Path=Stream}"></views:WebcamControl>
+			<views:OnnxControl
+				Width="{Binding #WebcamControl.Width}"
+				Height="{Binding #WebcamControl.Height}"
+				Onnx="{Binding Path=Onnx}"
+				Stream="{Binding Path=Stream}"></views:OnnxControl>
+		</Grid>
+	</Grid>
+	
+
 
 </Window>

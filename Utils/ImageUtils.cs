@@ -16,6 +16,14 @@ namespace NouchKill.Utils
             ms.Seek(0, SeekOrigin.Begin);
             return new Bitmap(ms);
         }
+
+        public static Bitmap ToAvaloniaBitmap(Image<Rgba32> image)
+        {
+            using var ms = new MemoryStream();
+            image.SaveAsPng(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return new Bitmap(ms);
+        }
         public static Image<Rgb24> ConvertMatToImageSharp(Mat mat)
         {
 
