@@ -1,5 +1,5 @@
-﻿using Avalonia;
-using NouchKill.IO;
+﻿using NouchKill.IO;
+using NouchKill.Services;
 using ReactiveUI;
 using System;
 using System.Reactive.Linq;
@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace NouchKill.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     {
         public Interaction<SettingViewModel, SettingViewModel?> ShowSettingDialog { get; }
 
@@ -39,15 +39,21 @@ namespace NouchKill.ViewModels
         public ICommand ExitCommand => ReactiveCommand.CreateFromTask(AppExit);
         public ICommand OpenSettingCommand => ReactiveCommand.CreateFromTask(OpenSetting);
 
-        public MainWindowViewModel(){
-            this.ShowSettingDialog = new Interaction<SettingViewModel, SettingViewModel?>();
+        private readonly SettingService settingService;
+
+        public MainWindowViewModel(SettingService settingService)
+        {
+            ShowSettingDialog = new Interaction<SettingViewModel, SettingViewModel?>();
+            this.settingService = settingService;
         }
-        private async Task OpenSetting() {
-            var store = new SettingViewModel();
+        private async Task OpenSetting()
+        {
+            var store = new SettingViewModel(settingService);
             var result = await ShowSettingDialog.Handle(store);
         }
 
-        private async Task AppExit() {
+        private async Task AppExit()
+        {
             Environment.Exit(0);
         }
 

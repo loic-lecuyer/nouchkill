@@ -2,8 +2,36 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="NouchKill.Views.SettingView"
+         xmlns:vm="using:NouchKill.ViewModels"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="NouchKill.Views.SettingView"		
+		 x:DataType="vm:SettingViewModel"
         Title="SettingView">
-  Welcome to Avalonia!
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		<vm:DesignSettingViewModel/>
+	</Design.DataContext>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="200"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+		<Border BorderThickness="1" 
+				BorderBrush="Gray" 
+				CornerRadius="4" Margin="8">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"></RowDefinition>
+					<RowDefinition Height="*"></RowDefinition>
+					<RowDefinition Height="Auto"></RowDefinition>
+				</Grid.RowDefinitions>
+				<Label Margin="4" FontWeight="Bold" HorizontalAlignment="Center">Rules</Label>
+				<ListBox ItemsSource="{Binding Path=Rules}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="4" Grid.Row="1"></ListBox>
+				<Button HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="4" Grid.Row="2">
+					Add rule
+				</Button>
+			</Grid>
+		</Border>
+	</Grid>
 </Window>
