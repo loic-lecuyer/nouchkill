@@ -3,11 +3,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:vm="using:NouchKill.ViewModels"
-         
-		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="NouchKill.Views.SettingView"		
+          xmlns:conv="using:NouchKill.Converters"
+		mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="450"
+        x:Class="NouchKill.Views.SettingView"
 		 x:DataType="vm:SettingViewModel"
         Title="SettingView">
+
 	<Design.DataContext>
 		<!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -17,9 +18,14 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="200"></ColumnDefinition>
 			<ColumnDefinition Width="*"></ColumnDefinition>
+			
 		</Grid.ColumnDefinitions>
-		<Border BorderThickness="1" 
-				BorderBrush="Gray" 
+		<Grid.RowDefinitions>			
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="Auto"></RowDefinition>
+		</Grid.RowDefinitions>
+		<Border BorderThickness="1"
+				BorderBrush="Gray"
 				CornerRadius="4" Margin="8">
 			<Grid>
 				<Grid.RowDefinitions>
@@ -28,17 +34,148 @@
 					<RowDefinition Height="Auto"></RowDefinition>
 				</Grid.RowDefinitions>
 				<Label Margin="4" FontWeight="Bold" HorizontalAlignment="Center">Rules</Label>
-				<ListBox ItemsSource="{Binding Path=Rules}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="4" Grid.Row="1">
-          <ListBox.DataTemplates>
-            <DataTemplate DataType="{x:Type vm:RuleViewModel}">
-              <TextBlock Text="{Binding Name}"></TextBlock>
-            </DataTemplate>
-          </ListBox.DataTemplates>
-        </ListBox>
+				<ListBox SelectedItem="{Binding SelectedRule}" ItemsSource="{Binding Path=Rules}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="4" Grid.Row="1">
+					<ListBox.DataTemplates>
+						<DataTemplate DataType="{x:Type vm:RuleViewModel}">
+							<TextBlock Text="{Binding Name}"></TextBlock>
+						</DataTemplate>
+					</ListBox.DataTemplates>
+				</ListBox>
 				<Button Command="{Binding AddRuleCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="4" Grid.Row="2">
 					Add rule
 				</Button>
 			</Grid>
 		</Border>
+		<Border IsVisible="{Binding SelectedRule,Converter={x:Static ObjectConverters.IsNotNull}}" Grid.Column="1"  BorderThickness="1"
+				BorderBrush="Gray"
+				CornerRadius="4" Margin="8">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"></RowDefinition>
+					<RowDefinition Height="Auto"></RowDefinition>
+					<RowDefinition Height="*"></RowDefinition>
+					
+					
+				</Grid.RowDefinitions>
+				<Label Margin="4" FontWeight="Bold" HorizontalAlignment="Center">Rule Detail</Label>
+				<Grid Grid.Row="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="60"></ColumnDefinition>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="4" Text="Name : "></TextBlock>
+					<TextBox Text="{Binding SelectedRule.Name}" Margin="4" Grid.Column="1" ></TextBox>
+				</Grid>
+				<Grid  Grid.Row="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="300"></ColumnDefinition>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<Grid Grid.Column="0">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"></RowDefinition>
+							<RowDefinition Height="*"></RowDefinition>							
+						</Grid.RowDefinitions>
+						<Label Grid.Row="0" Margin="4"  HorizontalAlignment="Center">Trigger</Label>
+						<Grid Grid.Row="1">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"></RowDefinition>
+								<RowDefinition Height="*"></RowDefinition>
+
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="60"></ColumnDefinition>
+								<ColumnDefinition Width="*"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<TextBlock VerticalAlignment="Center" Grid.Column="0" Margin="4" Text="Type : "></TextBlock>
+							<ComboBox SelectedItem="{Binding SelectedRule.Trigger.Mode,Mode=TwoWay}" ItemsSource="{Binding TriggerModes}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="4"></ComboBox>
+							<TextBlock  VerticalAlignment="Top" Grid.Row="1" Grid.Column="0" Margin="4" Text="Classes : "></TextBlock>
+							<ListBox ItemsSource="{Binding SelectedRule.Trigger.Classes}" Grid.Row="1" Grid.Column="1" Margin="4">
+								<ListBox.Styles>
+									<Style Selector="ListBoxItem">
+										<Setter Property="Height" Value="32"/>
+									</Style>
+								</ListBox.Styles>
+								<ListBox.ItemTemplate>
+									<DataTemplate x:DataType="{x:Type vm:LabelViewModel}">
+										<StackPanel Orientation="Horizontal">
+											<CheckBox Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding IsChecked}"></CheckBox>
+											<TextBlock Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Center"  Text="{Binding Name}"></TextBlock>
+										</StackPanel>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+						</Grid>
+						
+					</Grid>
+					<Grid Grid.Column="1">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"></RowDefinition>
+							<RowDefinition Height="*"></RowDefinition>
+							<RowDefinition Height="Auto"></RowDefinition>
+						</Grid.RowDefinitions>
+						<Label Grid.Row="0" Margin="4"  HorizontalAlignment="Center">Actions</Label>
+						<Grid Grid.Row="1">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="200"></ColumnDefinition>
+								<ColumnDefinition Width="*"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<ListBox SelectedItem="{Binding SelectedAction}" ItemsSource="{Binding SelectedRule.Actions}"  Margin="4">
+								<ListBox.ItemTemplate>
+									<DataTemplate DataType="{x:Type vm:ActionViewModel}">
+										<TextBlock Text="{Binding DisplayName}"></TextBlock>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+							<Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Margin="4" CornerRadius="4">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="Auto"></RowDefinition>										
+										<RowDefinition Height="*"></RowDefinition>
+									</Grid.RowDefinitions>
+									<Label Grid.Row="0" Margin="4"  HorizontalAlignment="Center">Action Details</Label>
+									<ContentControl Grid.Row="1" Content="{Binding SelectedAction}">
+										<ContentControl.DataTemplates>
+											<DataTemplate DataType="{x:Type vm:TakeScreenshotActionViewModel}">
+												
+											</DataTemplate>
+											<DataTemplate DataType="{x:Type vm:PlaySoundActionViewModel}">
+												
+											</DataTemplate>
+										</ContentControl.DataTemplates>
+									</ContentControl>
+								</Grid>
+							</Border>
+						</Grid>
+						
+						
+						<Grid Grid.Row="2">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="100"></ColumnDefinition>
+								<ColumnDefinition Width="*"></ColumnDefinition>
+								<ColumnDefinition Width="Auto"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<TextBlock VerticalAlignment="Center" Margin="4" Text="Action Type : "></TextBlock>
+							<ComboBox SelectedItem="{Binding SelectedActionType}" ItemsSource="{Binding ActionTypes}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="4"></ComboBox>
+							<Button Command="{Binding AddActionCommand}" Width="60" HorizontalContentAlignment="Center" Grid.Column="2" Margin="4" HorizontalAlignment="Stretch">Add</Button>
+						</Grid>
+						
+					</Grid>
+				</Grid>
+				
+				
+				
+
+			</Grid>
+		</Border>
+
+		<Grid Margin="4" Grid.Row="1" Grid.ColumnSpan="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+				
+			</Grid.ColumnDefinitions>
+		
+			<Button Command="{Binding ApplyCommand}" HorizontalContentAlignment="Center" Grid.Column="1" Margin="4" HorizontalAlignment="Stretch">Apply</Button>
+		</Grid>
 	</Grid>
 </Window>

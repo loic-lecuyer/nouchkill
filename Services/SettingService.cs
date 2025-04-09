@@ -1,6 +1,8 @@
 ﻿using NouchKill.Models;
 using System;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace NouchKill.Services
 {
@@ -17,7 +19,15 @@ namespace NouchKill.Services
                 string json = System.IO.File.ReadAllText(settingsPath);
                 try
                 {
-                    settings = System.Text.Json.JsonSerializer.Deserialize<Settings>(json);
+                    var options = new JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                        Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
+                    };
+                    settings = System.Text.Json.JsonSerializer.Deserialize<Settings>(json, options);
                 }
                 catch (Exception ex)
                 {
@@ -36,7 +46,15 @@ namespace NouchKill.Services
         {
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
             string settingsPath = System.IO.Path.Combine(appPath, "settings.json");
-            string json = System.Text.Json.JsonSerializer.Serialize(settings);
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
+            };
+            string json = System.Text.Json.JsonSerializer.Serialize(settings, options);
             System.IO.File.WriteAllText(settingsPath, json);
         }
     }

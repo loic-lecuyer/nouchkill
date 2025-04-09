@@ -50,6 +50,7 @@ namespace NouchKill.ViewModels
         {
             var store = new SettingViewModel(settingService);
             var result = await ShowSettingDialog.Handle(store);
+
         }
 
         private async Task AppExit()

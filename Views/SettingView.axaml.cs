@@ -1,9 +1,17 @@
-using Avalonia.Controls;
+using Avalonia.ReactiveUI;
+using NouchKill.ViewModels;
 
-namespace NouchKill.Views {
-    public partial class SettingView : Window {
-        public SettingView() {
+namespace NouchKill.Views
+{
+    public partial class SettingView : ReactiveWindow<SettingViewModel>
+    {
+        public SettingView()
+        {
             InitializeComponent();
+
+
         }
+
+
     }
 }

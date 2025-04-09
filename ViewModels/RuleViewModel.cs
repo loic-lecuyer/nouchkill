@@ -25,9 +25,18 @@ namespace NouchKill.ViewModels
         public RuleViewModel(Rule rule)
         {
             Name = rule.Name;
-            Trigger = TriggerViewModel.Create(rule.Trigger);
+            Trigger = new TriggerViewModel(rule.Trigger);
             Actions.AddRange((from a in rule.Actions select ActionViewModel.Create(a)).ToList());
 
+        }
+
+        internal Rule ToRule()
+        {
+            Rule rule = new Rule();
+            rule.Name = Name;
+            rule.Trigger = Trigger.ToTrigger();
+            rule.Actions = Actions.Select(a => a.ToAction()).ToList();
+            return rule;
         }
     }
 }
