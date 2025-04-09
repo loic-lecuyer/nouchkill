@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:vm="using:NouchKill.ViewModels"
+         
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="NouchKill.Views.SettingView"		
 		 x:DataType="vm:SettingViewModel"
@@ -27,8 +28,14 @@
 					<RowDefinition Height="Auto"></RowDefinition>
 				</Grid.RowDefinitions>
 				<Label Margin="4" FontWeight="Bold" HorizontalAlignment="Center">Rules</Label>
-				<ListBox ItemsSource="{Binding Path=Rules}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="4" Grid.Row="1"></ListBox>
-				<Button HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="4" Grid.Row="2">
+				<ListBox ItemsSource="{Binding Path=Rules}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="4" Grid.Row="1">
+          <ListBox.DataTemplates>
+            <DataTemplate DataType="{x:Type vm:RuleViewModel}">
+              <TextBlock Text="{Binding Name}"></TextBlock>
+            </DataTemplate>
+          </ListBox.DataTemplates>
+        </ListBox>
+				<Button Command="{Binding AddRuleCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="4" Grid.Row="2">
 					Add rule
 				</Button>
 			</Grid>

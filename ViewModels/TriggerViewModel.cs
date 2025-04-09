@@ -5,9 +5,9 @@ namespace NouchKill.ViewModels
 {
     public abstract class TriggerViewModel : ViewModelBase
     {
-        public static TriggerViewModel Create(Trigger trigger)
-        {
-            throw new NotImplementedException();
+        public static TriggerViewModel? Create(Trigger trigger)
+        { 
+            return null;   
         }
     }
 }

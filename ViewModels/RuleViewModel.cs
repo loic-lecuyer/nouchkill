@@ -18,7 +18,7 @@ namespace NouchKill.ViewModels
             }
         }
 
-        public TriggerViewModel Trigger { get; set; }
+        public TriggerViewModel? Trigger { get; set; }
 
         public ObservableCollection<ActionViewModel> Actions { get; set; } = new ObservableCollection<ActionViewModel>();
 
