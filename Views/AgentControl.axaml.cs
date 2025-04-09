@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using NouchKill.IO;
 using NouchKill.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -81,46 +82,40 @@ AvaloniaProperty.RegisterDirect<AgentControl, OnnxStream?>(
         {
             _predictions.Remove(pdbc);
         }
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            if (TxtClasses.Text.Length > 0)
+        try {
+            await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                List<string> classesToCheck = new List<string>();
-                if (TxtClasses.Text.IndexOf(",") != -1)
-                {
-                    classesToCheck = TxtClasses.Text.Split(',').ToList();
-                }
-                else
-                {
-                    classesToCheck.Add(TxtClasses.Text);
-                }
-                bool isInAnyClass = false;
-                foreach (string classToCheck in classesToCheck)
-                {
-                    bool isIn = (from p in _predictions where p.Label.Equals(classToCheck) select p).Any();
-                    if (isIn)
-                    {
-                        isInAnyClass = true;
+                if (TxtClasses.Text.Length > 0) {
+                    List<string> classesToCheck = new List<string>();
+                    if (TxtClasses.Text.IndexOf(",") != -1) {
+                        classesToCheck = TxtClasses.Text.Split(',').ToList();
+                    } else {
+                        classesToCheck.Add(TxtClasses.Text);
                     }
+                    bool isInAnyClass = false;
+                    foreach (string classToCheck in classesToCheck) {
+                        bool isIn = (from p in _predictions where p.Label.Equals(classToCheck) select p).Any();
+                        if (isIn) {
+                            isInAnyClass = true;
+                        }
 
 
 
+                    }
+                    if (isInAnyClass) {
+                        BorderBrush = Avalonia.Media.Brushes.Red;
+                        BorderThickness = new Avalonia.Thickness(2);
+
+                    } else {
+                        BorderBrush = Avalonia.Media.Brushes.Green;
+                        BorderThickness = new Avalonia.Thickness(2);
+                    }
                 }
-                if (isInAnyClass)
-                {
-                    BorderBrush = Avalonia.Media.Brushes.Red;
-                    BorderThickness = new Avalonia.Thickness(2);
-
-                }
-                else
-                {
-                    BorderBrush = Avalonia.Media.Brushes.Green;
-                    BorderThickness = new Avalonia.Thickness(2);
-                }
-            }
 
 
-        });
+            });
+        } catch (OperationCanceledException) { }
+       
 
     }
 
