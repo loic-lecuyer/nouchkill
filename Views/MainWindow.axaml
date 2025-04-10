@@ -32,7 +32,19 @@
         <ColumnDefinition Width="200"></ColumnDefinition>
         <ColumnDefinition Width="*"></ColumnDefinition>
       </Grid.ColumnDefinitions>
-      <views:AgentControl 	Onnx="{Binding Path=Onnx}" Grid.Column="0"></views:AgentControl>
+      <!--
+       <views:AgentControl 	Onnx="{Binding Path=Onnx}" Grid.Column="0"></views:AgentControl>
+    
+      -->
+      <Grid Grid.Column="0">
+        <ListBox ItemsSource="{Binding AgentService.Rules}">
+          <ListBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type vm:RuleViewModel}">
+              <TextBlock Text="{Binding Name}"></TextBlock>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Grid>
       <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
         <views:WebcamControl x:Name="WebcamControl"  Stream="{Binding Path=Stream}"></views:WebcamControl>
         <views:OnnxControl
