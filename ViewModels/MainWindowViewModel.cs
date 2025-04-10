@@ -40,15 +40,17 @@ namespace NouchKill.ViewModels
         public ICommand OpenSettingCommand => ReactiveCommand.CreateFromTask(OpenSetting);
 
         private readonly SettingService settingService;
+        private readonly AgentService agentService;
 
-        public MainWindowViewModel(SettingService settingService)
+        public MainWindowViewModel(SettingService settingService, AgentService agentService)
         {
             ShowSettingDialog = new Interaction<SettingViewModel, SettingViewModel?>();
             this.settingService = settingService;
+            this.agentService = agentService;
         }
         private async Task OpenSetting()
         {
-            var store = new SettingViewModel(settingService);
+            var store = new SettingViewModel(settingService,this.agentService);
             var result = await ShowSettingDialog.Handle(store);
 
         }
@@ -61,15 +63,24 @@ namespace NouchKill.ViewModels
         private async Task OnOpened()
         {
             Console.WriteLine("Fenêtre ouverte !");
+            _onnx.OnPredictionsReady += this._onnx_OnPredictionsReady;
             _onnx.Start();
             _stream.Start();
+            this.agentService.Start();
+        }
+
+        private void _onnx_OnPredictionsReady(object? sender, System.Collections.Generic.List<Models.Prediction> e) {
+            this.agentService.SetPredictions(e, Stream);
         }
 
         private async Task OnClosing()
         {
             Console.WriteLine("Fermeture en cours !");
+            _onnx.OnPredictionsReady -= this._onnx_OnPredictionsReady;
+            this.agentService.Stop();
             _onnx.Stop();
             _stream.Stop();
+        
         }
 
     }

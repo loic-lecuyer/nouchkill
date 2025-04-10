@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using NouchKill.IO;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace NouchKill.Models
 {
@@ -22,12 +25,19 @@ namespace NouchKill.Models
             }
             return null;
         }
+
+        public abstract void Run(List<Prediction> e, WebcamStream stream);
     }
-    public class TakeScreenshotAction : Action
-    {
+    public class TakeScreenshotAction : Action {
+        public override void Run(List<Prediction> e, WebcamStream stream) {
+            Debug.WriteLine("TakeScreenshotAction");
+            stream.TakeScreenshot();
+        }
     }
 
-    public class PlaySoundAction : Action
-    {
+    public class PlaySoundAction : Action {
+        public override void Run(List<Prediction> e, WebcamStream stream) {
+            Debug.WriteLine("PlaySoundAction");
+        }
     }
 }

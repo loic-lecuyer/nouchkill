@@ -15,6 +15,8 @@ namespace NouchKill
             collection.AddTransient<MainWindowViewModel>();
             collection.AddTransient<SettingViewModel>();
             collection.AddSingleton<SettingService>();
+            collection.AddSingleton<AgentService>();
+            
         }
     }
     public partial class App : Application

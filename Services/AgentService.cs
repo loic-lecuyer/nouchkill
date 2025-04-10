@@ -1,0 +1,64 @@
+﻿using NouchKill.IO;
+using NouchKill.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NouchKill.Services {
+    public class AgentService {
+        private readonly SettingService settingService;
+        private Settings settings;
+        private List<Prediction> previousPredictions = new List<Prediction>();
+        public AgentService(SettingService settingService) {
+            this.settingService = settingService;
+        }
+        internal void SetPredictions(List<Prediction> e, IO.WebcamStream stream) {
+            foreach (var item in settings.Rules) {
+                this.ProcessRule(item, e, stream);
+            }
+        }
+
+        private void ProcessRule(Rule item, List<Prediction> e, WebcamStream stream) {
+            if (this.IsTriggered(item.Trigger, e)){
+                foreach (var action in item.Actions) {
+                    this.RunAction(action, e, stream);
+                }
+            }
+            this.previousPredictions = e;   
+        }
+
+        private void RunAction(Models.Action action, List<Prediction> e, WebcamStream stream) {
+            action.Run(e, stream);
+        }
+
+        private bool IsTriggered(Trigger trigger, List<Prediction> e) {
+            int countPrevious = (from p in this.previousPredictions where trigger.Classes.Contains(p.Label) select p).Count();
+            int countCurrent = (from p in e where trigger.Classes.Contains(p.Label) select p).Count();
+            switch (trigger.Mode) {
+                case TriggerMode.AllDisappear:
+                    if (countPrevious > 0 && countCurrent == 0) return true;
+                    break;
+                case TriggerMode.OneAppear:
+                    if (countCurrent != countPrevious && countCurrent >0) return true;
+                    break;
+                case TriggerMode.AllAppear:
+                    if (countCurrent != countPrevious && countCurrent == trigger.Classes.Count) return true;
+                    break;
+                case TriggerMode.OneDisappear:
+                    if (countPrevious > 0 && countCurrent == 0) return true;
+                    break;
+            }
+            return false;
+        }
+
+        internal void Start() {
+            this.settings = this.settingService.LoadSetting();
+        }
+
+        internal void Stop() {
+            
+        }
+    }
+}

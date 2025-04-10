@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using NouchKill.Models;
 namespace NouchKill.ViewModels
 {
     public class SettingViewModel : ViewModelBase, ISettingViewModel
@@ -43,6 +43,7 @@ namespace NouchKill.ViewModels
         }
         private ActionType? _selectedActionType = null;
         private readonly SettingService settingService;
+        private readonly AgentService agentService;
 
         public ActionType? SelectedActionType
         {
@@ -78,7 +79,7 @@ namespace NouchKill.ViewModels
             SelectedAction = null;
         }
 
-        public SettingViewModel(SettingService settingService)
+        public SettingViewModel(SettingService settingService,AgentService agentService)
         {
             Settings settings = settingService.LoadSetting();
             settings.Rules.ForEach(rule =>
@@ -86,6 +87,7 @@ namespace NouchKill.ViewModels
                 Rules.Add(new RuleViewModel(rule));
             });
             this.settingService = settingService;
+            this.agentService = agentService;
         }
 
         private async Task ApplySettings()
@@ -93,6 +95,8 @@ namespace NouchKill.ViewModels
             Settings settings = new Settings();
             settings.Rules.AddRange(Rules.Select(rule => rule.ToRule()));
             settingService.SaveSetting(settings);
+            this.agentService.Stop();
+            this.agentService.Start();  
         }
 
     }

@@ -5,6 +5,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,6 +48,14 @@ namespace NouchKill.IO
                             if (!frame.Empty())
                             {
                                 using var image = ImageUtils.ConvertMatToImageSharp(frame);
+                                if (this.doScreenshot) {
+                                    string appPath = AppDomain.CurrentDomain.BaseDirectory;
+                                    DateTime n = DateTime.Now;
+                                    string fileName = "screenshot_" + n.Year + "-" + n.Month + "-" + n.Day + "__" + n.Hour + "-" + n.Minute + "-" + n.Second + ".png";
+                                    string filePath = Path.Combine(appPath, fileName);
+                                    image.SaveAsPng(filePath);                                   
+                                    this.doScreenshot = false;  
+                                }
                                 OnImageRead?.Invoke(this, image);
 
                                 if (timerDebug.Elapsed.TotalSeconds > 3)
@@ -94,6 +103,10 @@ namespace NouchKill.IO
         {
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
+        }
+        private bool doScreenshot = false;
+        public void TakeScreenshot() {
+           this.doScreenshot = true;    
         }
     }
 }
