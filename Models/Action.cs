@@ -1,6 +1,12 @@
 ﻿using NouchKill.IO;
+using SoundFlow.Backends.MiniAudio;
+using SoundFlow.Components;
+using SoundFlow.Enums;
+using SoundFlow.Providers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text.Json.Serialization;
 
 namespace NouchKill.Models
@@ -28,16 +34,32 @@ namespace NouchKill.Models
 
         public abstract void Run(List<Prediction> e, WebcamStream stream);
     }
-    public class TakeScreenshotAction : Action {
-        public override void Run(List<Prediction> e, WebcamStream stream) {
+    public class TakeScreenshotAction : Action
+    {
+        public override void Run(List<Prediction> e, WebcamStream stream)
+        {
             Debug.WriteLine("TakeScreenshotAction");
             stream.TakeScreenshot();
         }
     }
 
-    public class PlaySoundAction : Action {
-        public override void Run(List<Prediction> e, WebcamStream stream) {
-            Debug.WriteLine("PlaySoundAction");
+    public class PlaySoundAction : Action
+    {
+        public override void Run(List<Prediction> e, WebcamStream stream)
+        {
+            string appPath = AppDomain.CurrentDomain.BaseDirectory;
+            string soundsDir = System.IO.Path.Combine(appPath, "Sounds");
+            string mp3File = System.IO.Path.Combine(soundsDir, "dog.mp3");
+            using var audioEngine = new MiniAudioEngine(44100, Capability.Playback);
+
+            // Create a SoundPlayer and load an audio file
+            var player = new SoundPlayer(new StreamDataProvider(File.OpenRead(mp3File)));
+
+            // Add the player to the master mixer
+            Mixer.Master.AddComponent(player);
+
+            // Start playback
+            player.Play();
         }
     }
 }
