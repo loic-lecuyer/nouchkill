@@ -22,6 +22,7 @@ namespace NouchKill.Services {
             foreach (var item in settings.Rules) {
                 this.ProcessRule(item, e, stream);
             }
+            this.previousPredictions = e;
         }
 
         private void ProcessRule(Rule item, List<Prediction> e, WebcamStream stream) {
@@ -38,7 +39,7 @@ namespace NouchKill.Services {
                     rule.IsTriggered = false;
                 }
             }
-            this.previousPredictions = e;   
+           
         }
 
         private void RunAction(Models.Action action, List<Prediction> e, WebcamStream stream) {
@@ -46,8 +47,9 @@ namespace NouchKill.Services {
         }
 
         private bool IsTriggered(Trigger trigger, List<Prediction> e) {
-            int countPrevious = (from p in this.previousPredictions where trigger.Classes.Contains(p.Label) select p).Count();
-            int countCurrent = (from p in e where trigger.Classes.Contains(p.Label) select p).Count();
+            List<string> lowerClasses = (from c in trigger.Classes select c.ToLower()).ToList();    
+            int countPrevious = (from p in this.previousPredictions where lowerClasses.Contains(p.Label.ToLower()) select p).Count();
+            int countCurrent = (from p in e where lowerClasses.Contains(p.Label.ToLower()) select p).Count();
             switch (trigger.Mode) {
                 case TriggerMode.AllDisappear:
                     if (countPrevious > 0 && countCurrent == 0) return true;

@@ -49,17 +49,23 @@ namespace NouchKill.Models
         {
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
             string soundsDir = System.IO.Path.Combine(appPath, "Sounds");
-            string mp3File = System.IO.Path.Combine(soundsDir, "dog.mp3");
+            string mp3File = System.IO.Path.Combine(soundsDir, "dog.wav");
             using var audioEngine = new MiniAudioEngine(44100, Capability.Playback);
 
-            // Create a SoundPlayer and load an audio file
-            var player = new SoundPlayer(new StreamDataProvider(File.OpenRead(mp3File)));
+            try {
+                // Create a SoundPlayer and load an audio file
+                var player = new SoundPlayer(new StreamDataProvider(File.OpenRead(mp3File)));
 
-            // Add the player to the master mixer
-            Mixer.Master.AddComponent(player);
+                // Add the player to the master mixer
+                Mixer.Master.AddComponent(player);
 
-            // Start playback
-            player.Play();
+                // Start playback
+                Debug.WriteLine("Start Play  Sound ");
+                player.Play();
+            } catch (Exception ex) {
+                Debug.WriteLine("Erreur " + ex.Message);
+            }
+           
         }
     }
 }
